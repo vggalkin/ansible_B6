@@ -1,0 +1,26 @@
+---
+- hosts: test
+  become: yes
+  gather_facts: yes
+  tasks:
+    - name: update package index
+      apt: name=aptitude state=latest update_cache=yes force_apt_get=yes
+    - name: install packages to allow apt to use a repository over HTTPS
+      apt: name={{ item }} state=latest update_cache=yes
+      loop: ['ca-certificates', 'curl', 'gnupg', 'lsb-release']
+    - name: Add Docker’s official GPG key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+    - name: add Docker repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu focal stable
+        state: present
+    - name: install docker-ce docker-ce-cli containerd.io
+      apt: name={{item}} state=latest update_cache=yes
+      loop: ['docker-ce', 'docker-ce-cli', 'containerd.io']
+    - name: run docker
+      service:
+        name: docker
+        state: started
+        enabled: yes
