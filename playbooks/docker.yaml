@@ -1,7 +1,7 @@
 ---
 - hosts: test
   become: yes
-  gather_facts: yes
+  gather_facts: no
   tasks:
     - name: update package index
       apt: name=aptitude state=latest update_cache=yes force_apt_get=yes
