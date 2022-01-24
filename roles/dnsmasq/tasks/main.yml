@@ -1,0 +1,15 @@
+---
+# tasks file for dnsmasq
+- name: Install dnsmasq
+  apt:
+    name: dnsmasq
+    state: latest
+- name: Configuration dnsmasq
+  copy:
+    src: /etc/ansible/roles/dnsmasq/files/dnsmasq.conf
+    dest: /etc/dnsmasq.conf
+- name: start dnsmasq
+  service:
+    name: dnsmasq
+    state: started
+    enabled: yes
