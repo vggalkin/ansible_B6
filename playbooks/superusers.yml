@@ -1,0 +1,29 @@
+---
+- hosts: test
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: Create Group superusers
+      group:
+        name: superusers
+        state: present
+    - name: Create user2
+      user:
+        name: user2
+        password: $6$rounds=656000$zQFwikge6GLtm8NT$j16rg6n.JF4OF2VqI8VJU7GX1jPHS99oqTvdHR62iIz1gxajQ.awe2F91vqorFm1v31tZTdEkjN7Oga471Phx/
+        comment: User 2
+        group: superusers
+    - name: Create user3
+      user:
+        name: user3
+        comment: user 3
+        password: $6$rounds=656000$zQFwikge6GLtm8NT$j16rg6n.JF4OF2VqI8VJU7GX1jPHS99oqTvdHR62iIz1gxajQ.awe2F91vqorFm1v31tZTdEkjN7Oga471Phx/
+        group: superusers
+    - name: add line and Validate the sudoers file before saving
+      lineinfile:
+        path: /etc/sudoers
+        state: present
+        line: '%superusers ALL=(ALL) ALL'
+        create: yes
+        validate: /usr/sbin/visudo -cf %s
+
