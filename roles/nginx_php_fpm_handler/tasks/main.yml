@@ -25,13 +25,29 @@
   copy:
     src: /home/vladimir/SkillFactory/ansible/roles/nginx_php_fpm/files/index.php
     dest: /var/www/html/index.php
-- name: Restart Nginx
-  service: 
-    name: nginx
-    state: restarted
-    enabled: yes
-- name: Restart php7.0-fpm
-  service:
-    name: php7.0-fpm
-    state: restarted
-    enabled: yes
+  notify:
+  - Restart nginx
+  - Restart fpm
+
+- name: Change root direcory
+  lineinfile:
+    path: /etc/nginx/sites-available/192.168.1.113
+    regexp: 'root /var/www/html;'
+    line: '    root /opt/nginx/ansible;'
+    backrefs: yes
+
+- name: Create directory nginx
+  file:
+    path: /opt/nginx
+    state: directory
+- name: Create directory ansible
+  file:
+    path: /opt/nginx/ansible
+    state: directory
+- name: Create new index file
+  copy:
+    src: /home/vladimir/SkillFactory/ansible/roles/nginx_php_fpm_handler/files/index_new.php
+    dest: /opt/nginx/ansible/index.php
+  notify:
+  - Restart nginx
+  - Restart fpm
