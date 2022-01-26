@@ -1,0 +1,32 @@
+---
+# tasks file for nginx_php_fpm
+- name: Install Nginx
+  apt:
+    name: nginx
+    state: latest
+- name: install Php-fpm
+  apt: 
+    name: php7.0-fpm
+    state: latest
+- name: Configuration server
+  copy:
+    src: /home/vladimir/SkillFactory/ansible/roles/nginx_php_fpm/files/192.168.1.113.cfg
+    dest: /etc/nginx/sites-available/192.168.1.113
+- name: Remove default config from sites-enabled
+  command: 'rm /etc/nginx/sites-enabled/default'
+- name: ceate symlink
+  command: 'ln -s /etc/nginx/sites-available/192.168.1.113 /etc/nginx/sites-enabled/'
+- name: Create index.php
+  copy:
+    src: /home/vladimir/SkillFactory/ansible/roles/nginx_php_fpm/files/index.php
+    dest: /var/www/html/index.php
+- name: Restart Nginx
+  service: 
+    name: nginx
+    state: restarted
+    enabled: yes
+- name: Restart php7.0-fpm
+  service:
+    name: php7.0-fpm
+    state: restarted
+    enabled: yes
