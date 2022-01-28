@@ -1,0 +1,5 @@
+---
+# vars file for php
+phpfpm_conf: /etc/php/7.4/fpm/pool.d/www.conf
+local_files: /home/vladimir/SkillFactory/ansible/roles/php/files/
+ip_address_php: 10.129.0.5

@@ -1,0 +1,7 @@
+---
+# vars file for http
+local_files: /home/vladimir/SkillFactory/ansible/roles/http/files/
+remote_sites_available: /etc/nginx/sites-available/
+remote_sites_enabled: /etc/nginx/sites-enabled/
+ip_address_nginx: 10.129.0.10
+ip_address_php: 10.129.0.5

@@ -1,0 +1,14 @@
+---
+- hosts: php
+  gather_facts: no
+  become: yes
+  roles:
+    - php
+    - users
+
+- hosts: nginx
+  gather_facts: no
+  become: yes
+  roles:
+    - http
+    - users

@@ -1,0 +1,26 @@
+---
+# tasks file for php
+- name: install Php-fpm
+  apt: 
+    name: php7.4-fpm
+    state: latest
+- name: Create dir /var/www/
+  file:
+    path: /var/www
+    state: directory
+- name: Create dir /var/www/html
+  file:
+    path: /var/www/html
+    state: directory
+- name: Create index php
+  copy:
+    src: "{{ local_files }}index.php"
+    dest: /var/www/html/index.php
+- name: Change port
+  lineinfile:
+    path: "{{ phpfpm_conf }}"
+    regexp: '^listen = '
+    line: "listen = {{ ip_address_php }}:9000"
+    backrefs: yes
+  notify:
+  - Restart php-fpm

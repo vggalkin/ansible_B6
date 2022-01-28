@@ -1,0 +1,35 @@
+---
+# tasks file for http
+- name: Install Nginx
+  apt:
+    name: nginx
+    state: latest
+- name: Remove default config from sites-available
+  file:
+    path: /etc/nginx/sites-available/default
+    state: absent
+- name: Configuration server
+  copy:
+    src: "{{ local_files }}config"
+    dest: "{{ remote_sites_available }}default"
+- name: Remove default config from sites-enabled
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+- name: ceate symlink
+  file:
+    src: "{{ remote_sites_available }}default"
+    dest: "{{ remote_sites_enabled }}default"
+    state: link
+- name: Create index php
+  copy:
+    src: "{{ local_files }}index.php"
+    dest: /var/www/html/index.php
+- name: Change IP and port php-fpm
+  lineinfile:
+    path: "{{ remote_sites_available }}default"
+    regexp: 'fastcgi_pass 127.0.0.1:8880;'
+    line: "        fastcgi_pass {{ ip_address_php }}:9000;"
+    backrefs: yes
+  notify:
+  - Restart nginx

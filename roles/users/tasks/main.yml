@@ -1,0 +1,19 @@
+
+- name: Create user
+  user:
+    name: "{{ username }}"
+    password: "{{ userpass | password_hash('sha512') }}"
+    shell: /bin/bash
+    groups: sudo
+    append: yes
+- name: Generate ssh key
+  user:
+    name: "{{ username }}"
+    generate_ssh_key: yes
+    ssh_key_bits: 2048
+    ssh_key_file: .ssh/id_rsa
+- name: Setup authorized key from id_rsa.pub
+  authorized_key:
+    user: "{{ username }}"
+    state: present
+    key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
